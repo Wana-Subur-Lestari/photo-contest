@@ -21,6 +21,7 @@ export default function Login() {
         if (result.success) {
             navigate('/');
         } else {
+            navigate('/login');
             setError(result.error);
         }
 
