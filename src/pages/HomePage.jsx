@@ -11,7 +11,8 @@ export default function HomePage() {
     const { user, isAdmin } = useAuth();
 
     useEffect(() => {
-        loadGetStatus();
+        loadData()
+        // loadGetStatus();
     }, []);
 
     const loadGetStatus = async () => {

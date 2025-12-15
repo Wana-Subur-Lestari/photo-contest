@@ -7,6 +7,25 @@ import HomePage from './pages/HomePage.jsx';
 import RankPage from './pages/RankPage.jsx';
 import LeaderboardPage from './pages/LeaderboardPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
+import { getContestStatus } from './services/api.js';
+
+//check contest status 
+const CheckContestStatus = ({ children }) => {
+
+  const res = getContestStatus();
+  if (res.is_active) {
+    return children;
+  } else {
+    return (
+      <div className="max-w-3xl mx-auto text-center py-16">
+        <h1 className="text-4xl font-bold mb-4">Ditutup!</h1>
+        <p className="text-gray-600 text-lg">
+          Masa voting telah berakhir dan pemenang akan diumumkan tanggal 15 Desember 2025. Terima kasih atas partisipasi Anda!
+        </p>
+      </div>
+    );
+  }
+}
 
 // Protected Route wrapper
 const ProtectedRoute = ({ children, adminOnly = false }) => {
@@ -60,25 +79,31 @@ function AppContent() {
             <Route
               path="/register"
               element={
-                <PublicRoute>
-                  <Register />
-                </PublicRoute>
+                <CheckContestStatus>
+                  <PublicRoute>
+                    <Register />
+                  </PublicRoute>
+                </CheckContestStatus>
               }
             />
             <Route
               path="/"
               element={
-                <ProtectedRoute>
-                  <HomePage />
-                </ProtectedRoute>
+                <CheckContestStatus>
+                  <ProtectedRoute>
+                    <HomePage />
+                  </ProtectedRoute>
+                </CheckContestStatus>
               }
             />
             <Route
               path="/rank"
               element={
-                <ProtectedRoute>
-                  <RankPage />
-                </ProtectedRoute>
+                <CheckContestStatus>
+                  <ProtectedRoute>
+                    <RankPage />
+                  </ProtectedRoute>
+                </CheckContestStatus>
               }
             />
             <Route
