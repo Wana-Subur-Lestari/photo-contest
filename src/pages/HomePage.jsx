@@ -11,7 +11,6 @@ export default function HomePage() {
     const { user, isAdmin } = useAuth();
 
     useEffect(() => {
-        loadData();
         loadGetStatus();
     }, []);
 
@@ -20,8 +19,9 @@ export default function HomePage() {
             const res = await getContestStatus();
             setContestStatus(res.is_active);
             console.log(res.is_active);
-
+            loadData();
         } catch (error) {
+            setLoading(false);
             console.error('Failed to fetch contest status:', error);
         }
     };
