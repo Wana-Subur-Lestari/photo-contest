@@ -1,17 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getPhotos, getRankingStatus } from '../services/api';
+import { getPhotos, getRankingStatus, getContestStatus } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function HomePage() {
     const [photos, setPhotos] = useState([]);
     const [rankingStatus, setRankingStatus] = useState(null);
+    const [contestStatus, setContestStatus] = useState(true);
     const [loading, setLoading] = useState(true);
     const { user, isAdmin } = useAuth();
 
     useEffect(() => {
         loadData();
+        loadGetStatus();
     }, []);
+
+    const loadGetStatus = async () => {
+        try {
+            const res = await getContestStatus();
+            setContestStatus(res.is_active);
+            console.log(res.is_active);
+
+        } catch (error) {
+            console.error('Failed to fetch contest status:', error);
+        }
+    };
 
     const loadData = async () => {
         try {
@@ -31,6 +44,16 @@ export default function HomePage() {
 
     if (loading) {
         return <div className="text-center py-8">Loading...</div>;
+    }
+    if (!contestStatus) {
+        return (
+            <div className="max-w-3xl mx-auto text-center py-16">
+                <h1 className="text-4xl font-bold mb-4">Ditutup!</h1>
+                <p className="text-gray-600 text-lg">
+                    Masa voting telah berakhir dan pemenang akan diumumkan tanggal 15 Desember 2025. Terima kasih atas partisipasi Anda!
+                </p>
+            </div>
+        );
     }
 
     return (
